@@ -1,5 +1,7 @@
 #include "ofApp.h"
 
+//ofTexture is a wrapper for OpenGL texture API that allows for using and drawing bitmap data
+//A texture, defined in OpenGL, is a container/storage for one or more images (kinda feels like a Context)
 
 ofVideoGrabber videoGrabber;
 ofTexture textureInversion;
@@ -33,7 +35,10 @@ void ofApp::setup(){
     
     //COLOR INVERSION
 	videoColorInversionPixels = new unsigned char[(int) (camWidth * camHeight * 3.0)];
+    //this variable is a pointer to an array of unsigned-char-pointers with size 480 x 360 x 3 (for RGB)
+    //variable stores every pixel reference
     textureInversion.allocate(camWidth, camHeight, GL_RGB);
+    //then we have a texture variable
 
     //GRAYSCALE & MIRROR CODE
     videoGrayPixels = new unsigned char[camWidth*camHeight];
@@ -52,7 +57,8 @@ void ofApp::setup(){
 //--------------------------------------------------------------
 void ofApp::update(){
 	ofBackground(255,255,255);
-    videoGrabber.update(); //this simple call basically allows ofVideoGrabber to keep pulling video stream into itself
+    videoGrabber.update();
+    //this simple call powerfully allows ofVideoGrabber to keep pulling video stream into itself
 
     if (videoGrabber.isFrameNew()) {
         unsigned char * srcPixels = videoGrabber.getPixels();
@@ -72,6 +78,7 @@ void ofApp::update(){
             }
         }
         textureGray.loadData(videoGrayPixels, videoGrabber.getWidth(), videoGrabber.getHeight(), GL_LUMINANCE);
+        //load byte pixel data through OfTexture
         
         //COLOR INVERSION
         int totalPix = videoGrabber.getWidth() * videoGrabber.getHeight() * 3;
@@ -105,7 +112,7 @@ void ofApp::draw(){
     
     //GRAY SCALE
     textureGray.draw(0, 0, 120, 120);
-    //this gets ofTexture to draw whatever data is loaded inside into that x,y,width,height coordinate
+    //this gets ofTexture to draw whatever data is loaded inside into that texture into x,y,width,height coordinate
     
     //COLOR INVERSION
     textureInversion.draw(120, 0, 120, 120);
